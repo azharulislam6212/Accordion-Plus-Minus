@@ -1,0 +1,117 @@
+ <!-- Accordion -->
+<div class="accordion__container">        
+  <div class="accordion__item">
+      <div class="accordion__head">
+        <p>Shipping policy</p> 
+      </div>
+      <div class="accordion__content">
+         <p>Ships in 5-9 days</p>
+      </div>
+    </div>
+
+    <div class="accordion__item">
+      <div class="accordion__head">
+         <p>Care details</p>
+      </div>
+      <div class="accordion__content">
+         <p> Machine wash cold</p>
+      </div>
+  </div>
+
+</div>
+
+
+
+
+<style>
+
+.accordion__container {
+    width: 100%;
+    margin-bottom: 27px;
+  }
+  
+  .accordion__item {
+    border-bottom: 1px solid #000;
+    background-color: #fff;
+    padding: 16px 0;
+  }
+
+  .accordion__head {
+    position: relative;
+    cursor: pointer;
+   }
+  
+   .accordion__head::before,
+   .accordion__head::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    background-color: #000;
+    transition: all .3s;
+   }
+  
+   .accordion__head::before {
+    right: 30px;
+    width: 3px;
+    height: 20px;
+    margin-top: -10px;
+  }
+  
+  .accordion__head::after {
+    right: 21px;
+    width: 20px;
+    height: 3px;
+    margin-top: -2px;
+  }
+  
+  .accordion__head p {
+    color: #000;
+    font-size: 16px;
+    font-family: 'Noto Serif', serif;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 25.2px;
+    margin: 0;
+  }
+  
+  .accordion__content {
+    padding: 15px 0 0;
+    display: none;
+  }
+       
+  
+  .accordion__content  p {
+    color: #565A5C;
+    font-size: 13px;
+    font-family: Helvetica Neue;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 15px;
+    margin: 0;
+  }
+
+
+  .accordion__head.active::before {
+      transform: rotate(90deg);
+  }
+
+
+</style>
+
+<script>
+    $('.accordion__container .accordion__item:nth-child(1) .accordion__head').addClass('active');
+        $('.accordion__container .accordion__item:nth-child(1) .accordion__content').slideDown();
+        $('.accordion__head').on('click', function() {
+            if($(this).hasClass('active')) {
+            $(this).siblings('.accordion__content').slideUp();
+            $(this).removeClass('active');
+            }
+            else {
+            $('.accordion__content').slideUp();
+            $('.accordion__head').removeClass('active');
+            $(this).siblings('.accordion__content').slideToggle();
+            $(this).toggleClass('active');
+            }
+        }); 
+
+</script>
