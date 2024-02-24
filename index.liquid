@@ -1,117 +1,207 @@
- <!-- Accordion -->
-<div class="accordion__container">        
-  <div class="accordion__item">
-      <div class="accordion__head">
-        <p>Shipping policy</p> 
-      </div>
-      <div class="accordion__content">
-         <p>Ships in 5-9 days</p>
+{% liquid
+  assign s = section.settings
+%}
+<section class="faq-wrapper">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-7 m-auto">
+
+      {% if s.heading != blank %}
+        <h2 class="heading">{{ s.heading }}</h2>
+      {% endif %}
+
+        <div class="accordion__container">
+          {% liquid
+            assign blocks = section.blocks | where: 'type', 'block'
+          %}
+          {%- for block in blocks -%}
+            {% assign b = block.settings %}
+
+            {% if b.heading != blank or b.text != blank %}
+              <div class="accordion__item">
+                <button type="button" class="accordion__button">{{ b.heading }}</button>
+                <div class="accordion__content-text">
+                  {{ b.text }}
+                </div>
+              </div>
+            {% endif %}
+          {%- endfor -%}
+        </div>
+        {% if s.button_label != blank %}
+            <div class="btn-wrap">
+              <a
+                href="{{ s.button_link }}"
+                class="button{% if s.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %}"
+              >
+                {{- s.button_label -}}
+              </a>
+            </div>
+          {% endif %}
       </div>
     </div>
-
-    <div class="accordion__item">
-      <div class="accordion__head">
-         <p>Care details</p>
-      </div>
-      <div class="accordion__content">
-         <p> Machine wash cold</p>
-      </div>
   </div>
-
-</div>
-
-
-
+</section>
 
 <style>
+/* faq section */
 
-.accordion__container {
-    width: 100%;
-    margin-bottom: 27px;
-  }
-  
+.faq-wrapper{
+    position: relative;
+    padding: 60px 0;
+}
+
   .accordion__item {
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid rgba(23,23,23,.15);
     background-color: #fff;
-    padding: 16px 0;
   }
 
-  .accordion__head {
+  .accordion__button {
     position: relative;
     cursor: pointer;
+    padding-right: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border: none;
+    font-size: 1.3em;
+    display: block;
+    position: relative;
+    list-style: none;
+    background-color: transparent;
+    width: 100%;
+    text-align: left;
    }
   
-   .accordion__head::before,
-   .accordion__head::after {
-    content: '';
+   .accordion__button::before,
+   .accordion__button::after {
+    content: "";
     position: absolute;
-    top: 50%;
-    background-color: #000;
-    transition: all .3s;
+    top: calc(50% - 1px);
+    right: 0;
+    width: 11px;
+    height: 1px;
+    background-color: currentColor;
+    transition: .3s ease;
+    transition-property: transform,opacity;
    }
+
+   
+   .accordion__button:before {
+        transform: rotate(-90deg);
+    }
   
-   .accordion__head::before {
-    right: 30px;
-    width: 3px;
-    height: 20px;
-    margin-top: -10px;
-  }
+   .accordion__button.active::before {
+    transform: rotate(90deg);
+    opacity: 0;
+    }
+    .accordion__button.active::after {
+        transform: rotate(180deg);
+    }
+
   
-  .accordion__head::after {
-    right: 21px;
-    width: 20px;
-    height: 3px;
-    margin-top: -2px;
-  }
-  
-  .accordion__head p {
+  .accordion__button {
     color: #000;
-    font-size: 16px;
-    font-family: 'Noto Serif', serif;
     font-style: normal;
-    font-weight: 700;
-    line-height: 25.2px;
     margin: 0;
+    font-size: 1.3em;
   }
   
-  .accordion__content {
-    padding: 15px 0 0;
+  .accordion__content-text {
+    padding-bottom: 20px;
     display: none;
   }
        
-  
-  .accordion__content  p {
-    color: #565A5C;
-    font-size: 13px;
-    font-family: Helvetica Neue;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 15px;
+  .accordion__content-text p{
     margin: 0;
   }
 
-
-  .accordion__head.active::before {
-      transform: rotate(90deg);
+  .faq-wrapper .heading{
+    font-size: 21px;
   }
 
-
+  @media only screen and (max-width: 767.98px){
+  .faq-wrapper {
+        padding: 30px 0;
+    }
+  }
 </style>
 
 <script>
-    $('.accordion__container .accordion__item:nth-child(1) .accordion__head').addClass('active');
-        $('.accordion__container .accordion__item:nth-child(1) .accordion__content').slideDown();
-        $('.accordion__head').on('click', function() {
+
+        $('.accordion__container .accordion__item:nth-child(1) .accordion__button').addClass('active');
+        $('.accordion__container .accordion__item:nth-child(1) .accordion__content-text').slideDown();
+        $('.accordion__button').on('click', function() {
             if($(this).hasClass('active')) {
-            $(this).siblings('.accordion__content').slideUp();
+            $(this).siblings('.accordion__content-text').slideUp();
             $(this).removeClass('active');
             }
             else {
-            $('.accordion__content').slideUp();
-            $('.accordion__head').removeClass('active');
-            $(this).siblings('.accordion__content').slideToggle();
+            $('.accordion__content-text').slideUp();
+            $('.accordion__button').removeClass('active');
+            $(this).siblings('.accordion__content-text').slideToggle();
             $(this).toggleClass('active');
             }
         }); 
 
 </script>
+
+{% schema %}
+{
+  "name": "FAQ Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently asked Questions"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_style_secondary_1",
+      "default": false,
+      "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_1.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "block",
+      "name": "Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Why are you doing this?"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>We are a real agency with real results. We are based in Austria, not in Dubai. You will receive all content for download immediately after purchase and can immediately start optimizing your shop, running profitable ads and building your retention system.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Section"
+    }
+  ]
+}
+{% endschema %}
